@@ -1,0 +1,40 @@
+{
+    "name": "qingbing/php-db-model",
+    "description": "db-model模型的抽象",
+    "type": "library",
+    "license": "MIT",
+    "keywords": [
+        "php",
+        "db",
+        "model",
+        "db-model",
+        "validate",
+        "ActiveRecord"
+    ],
+    "homepage": "http://www.phpcorner.net",
+    "authors": [
+        {
+            "name": "qingbing",
+            "email": "780042175@qq.com"
+        }
+    ],
+    "require": {
+        "qingbing/php-helper": ">=1.0, <2.0",
+        "qingbing/php-model": ">=1.0, <2.0"
+    },
+    "autoload": {
+        "classmap": [
+            "src/DbModel.php"
+        ],
+        "psr-4": {
+            "DbModel\\": "src/lib"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "TestCore\\": "test/core",
+            "TestClass\\": "test/class",
+            "Test\\": "test/src"
+        }
+    }
+}
