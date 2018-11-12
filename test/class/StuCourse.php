@@ -10,7 +10,7 @@ namespace TestClass;
 
 use DbModel;
 
-class TestModel extends DbModel
+class StuCourse extends DbModel
 {
 
 }

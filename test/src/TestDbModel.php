@@ -8,6 +8,7 @@
 
 namespace Test;
 
+use TestClass\Stu;
 use TestCore\Tester;
 
 class TestDbModel extends Tester
@@ -20,5 +21,13 @@ class TestDbModel extends Tester
      */
     public function run()
     {
+        $stuModel = new Stu();
+
+        var_dump($stuModel);
+//        $stuModel = Stu::model();
+//
+//        var_dump($stuModel);
+
+
     }
 }
