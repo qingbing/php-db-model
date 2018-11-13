@@ -41,16 +41,6 @@ class ActiveRecord extends Model
     }
 
     /**
-     * 返回 AR 模型的数据表名，该函数可被重载
-     * @return string
-     */
-    public function tableName()
-    {
-        $t = explode('\\', get_class($this));
-        return '{{' . implode('_', array_map('strtolower', Unit::explodeByUpper(array_pop($t)))) . '}}';
-    }
-
-    /**
      * 返回模型的的主键,该方法可以被重写
      * @return mixed
      */
@@ -765,7 +755,6 @@ class ActiveRecord extends Model
  */
 class ActiveRecordMetaData extends Core
 {
-    private $_modelClassName;
     /**
      * @var BaseActiveRelation[]
      */

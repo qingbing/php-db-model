@@ -122,7 +122,7 @@ class DbModel extends Model
         if (!isset(self::$_md[$className])) {
             if ($this->cachingDuration > 0 && null !== ($cache = $this->getCache())) {
                 $_cacheKey = 'db.meta.data.' . get_class($this);
-                if (false === ($output = $cache->get($_cacheKey))) {
+                if (null === ($output = $cache->get($_cacheKey))) {
                     $output = new DbMetaData($this);
                     $cache->set($_cacheKey, $output, $this->cachingDuration);
                 }
@@ -141,5 +141,15 @@ class DbModel extends Model
     public function attributeNames()
     {
         // TODO: Implement attributeNames() method.
+    }
+
+    /**
+     * 返回 AR 模型的数据表名，该函数可被重载
+     * @return string
+     */
+    public function tableName()
+    {
+        $t = explode('\\', get_class($this));
+        return '{{' . implode('_', array_map('strtolower', Unit::explodeByUpper(array_pop($t)))) . '}}';
     }
 }

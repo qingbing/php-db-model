@@ -21,9 +21,7 @@
     "require": {
         "qingbing/php-helper": ">=1.0, <2.0",
         "qingbing/php-model": ">=1.0, <2.0",
-        "qingbing/php-database": ">=1.0, <2.0"
-    },
-    "require-dev": {
+        "qingbing/php-database": ">=1.0, <2.0",
         "qingbing/php-cache-file": ">=1.0, <2.0"
     },
     "autoload": {

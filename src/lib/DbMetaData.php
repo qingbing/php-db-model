@@ -14,6 +14,7 @@ use Helper\Base;
 
 class DbMetaData extends Base
 {
+    private $_modelClassName;
 
 
     /**
@@ -25,6 +26,9 @@ class DbMetaData extends Base
     {
         $this->_modelClassName = get_class($model);
         $tableName = $model->tableName();
+
+        var_dump($tableName);
+        exit;
         if (null === ($table = $model->getConnection()->getDriver()->getTable($tableName))) {
             throw new DbException(Unit::replace('The table "{table}" for active record class "{class}" cannot be found in the database.', [
                 '{class}' => $this->_modelClassName,
