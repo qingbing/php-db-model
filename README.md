@@ -1,10 +1,17 @@
 # php-model
 ## 描述
-db-model 的相关操作，定义
+db-model 的相关操作，定义了包含数据表关联关系的数据表操作ar模型
 
 ## 注意事项
- - model 的相关操作,包含有attributeNames、setAttributes、getAttributes、getAttributeLabel、getAttributeLabels 等
- - 对于设置了 model 属性后，采用 validate 进行验
+ - 包含有 php-model 的所有相关操作
+ - 提供对数据表的对应关系，save(新增和更新)、delete、find等操作
+ - 数据对象之间包含有四种关联关系
+   - BELONGS_TO : 属于
+   - HAS_MANY : 拥有（多个）
+   - HAS_ONE : 拥有（有且只有一个）
+   - STAT : 统计拥有的个数
+ - 几个特别的方法
+   - getRelate($relationName) : 
 
 ## 使用方法
 ```

@@ -515,15 +515,65 @@ class DbModel extends Model
      * @return $this[]|null
      * @throws Exception
      */
-    public function findAllByPks($pks)
+    public function findAllByPks(array $pks)
     {
-        return $this->findAllByAttributes([
-            $this->primaryKey() => $pks,
-        ]);
+        $criteria = new Criteria();
+        $criteria->addWhereIn($this->primaryKey(), $pks);
+        return $this->findAll($criteria);
+    }
+
+    /**
+     * 根据条件查询符合条件的记录数
+     * @param Criteria $criteria
+     * @return int
+     * @throws Exception
+     */
+    public function count(Criteria $criteria)
+    {
+        return $this->findBuilder($criteria)->count();
     }
 
     /**
      * todo
+     * 查询符合属性的记录数
+     * @param $attributes
+     * @return int
+     */
+    public function countByAttributes($attributes)
+    {
+        $criteria = new Criteria();
+        $attrs = [];
+        foreach ($attributes as $f => $v) {
+            $attrs[$this->quoteColumnName($f)] = $v;
+        }
+        $criteria->addWhereByAttributes($attrs);
+        return $this->count($criteria);
+    }
+
+    /**
+     * todo
+     * 查询是否有符合条件的记录
+     * @param Criteria $criteria
+     * @param array $params
+     * @return bool
+     */
+    public function exists(Criteria $criteria, $params = [])
+    {
+        return $this->count($criteria, $params) > 0;
+    }
+
+    /**
+     * todo
+     * 查询是否有符合条件的记录
+     * @param array $attributes
+     * @return bool
+     */
+    public function existByAttributes($attributes)
+    {
+        return $this->countByAttributes($attributes) > 0;
+    }
+
+    /**
      * __get：魔术方法，当直接访问属性不存在时被唤醒
      * @param string $property
      * @return mixed

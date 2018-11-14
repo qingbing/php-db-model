@@ -39,55 +39,6 @@ class ActiveRecord extends Model
     }
 
     /**
-     * 根据条件查询符合条件的记录数
-     * @param Criteria $criteria
-     * @param array $params
-     * @return int
-     */
-    public function count(Criteria $criteria, $params = [])
-    {
-        $command = $this->createFindCommand($criteria);
-        return $command->queryCount($params);
-    }
-
-    /**
-     * 查询符合属性的记录数
-     * @param $attributes
-     * @return int
-     */
-    public function countByAttributes($attributes)
-    {
-        $criteria = new Criteria();
-        $attrs = [];
-        foreach ($attributes as $f => $v) {
-            $attrs[$this->quoteColumnName($f)] = $v;
-        }
-        $criteria->addWhereByAttributes($attrs);
-        return $this->count($criteria);
-    }
-
-    /**
-     * 查询是否有符合条件的记录
-     * @param Criteria $criteria
-     * @param array $params
-     * @return bool
-     */
-    public function exists(Criteria $criteria, $params = [])
-    {
-        return $this->count($criteria, $params) > 0;
-    }
-
-    /**
-     * 查询是否有符合条件的记录
-     * @param array $attributes
-     * @return bool
-     */
-    public function existByAttributes($attributes)
-    {
-        return $this->countByAttributes($attributes) > 0;
-    }
-
-    /**
      * 在数据保存之前执行
      * @return bool
      */

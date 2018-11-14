@@ -2,7 +2,7 @@
 /**
  * Link         :   http://www.phpcorner.net
  * User         :   qingbing<780042175@qq.com>
- * Date         :   2018-11-11
+ * Date         :   2018-11-13
  * Version      :   1.0
  */
 
@@ -10,17 +10,15 @@ namespace TestClass;
 
 use DbModel;
 
-class Stu extends DbModel
+class StuClass extends DbModel
 {
-    /* @var int 开启缓存时缓存的时间（秒） */
-    protected $cachingDuration = 0;
     /**
      * 显示定义数据表名称，和类名相同，可以不用显示定义，但是建议都定义下
      * @return string
      */
     public function tableName()
     {
-        return "{{stu}}";
+        return "{{stu_class}}";
     }
 
     /**
@@ -30,9 +28,8 @@ class Stu extends DbModel
     public function relations()
     {
         return [
-            'stuClass' => [self::BELONGS_TO, '\TestClass\StuClass', 'class_id'],
-            'course' => [self::HAS_MANY, '\TestClass\StuCourse', 'stu_id'],
-            'statCourse' => [self::STAT, '\TestClass\StuCourse', 'stu_id'],
+            'master' => [self::HAS_ONE, '\TestClass\Stu', 'stu_id', 'condition' => '`is_master`=:is_master', 'params' => [':is_master' => 1]],
+            'stu' => [self::HAS_MANY, '\TestClass\Stu', 'stu_id'],
         ];
     }
 }
