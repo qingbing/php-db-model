@@ -64,7 +64,7 @@ class DbModel extends Model
     /**
      * 获取缓存实例
      * @return CacheFile|null
-     * @throws Exception
+     * @throws \Exception
      */
     public function getCache()
     {
@@ -77,7 +77,7 @@ class DbModel extends Model
     /**
      * 构造函数
      * @param string $scenario
-     * @throws Exception
+     * @throws \Exception
      */
     public function __construct($scenario = 'insert')
     {
@@ -113,7 +113,7 @@ class DbModel extends Model
      * 返回当前模型的数据库连接；
      * 如果使用非默认的DB连接，该方法应该被重写
      * @return Db
-     * @throws Exception
+     * @throws \Exception
      */
     public function getConnection()
     {
@@ -148,7 +148,7 @@ class DbModel extends Model
     /**
      * 返回模型的属性名称列表
      * @return array
-     * @throws Exception
+     * @throws \Exception
      */
     public function attributeNames()
     {
@@ -158,7 +158,7 @@ class DbModel extends Model
     /**
      * 返回 Db 模型的数据表结构
      * @return DbMetaData
-     * @throws Exception
+     * @throws \Exception
      */
     public function getMetaData()
     {
@@ -183,7 +183,7 @@ class DbModel extends Model
      * @param string $name
      * @param bool|false $refresh
      * @return mixed|null
-     * @throws Exception
+     * @throws \Exception
      */
     public function getRelated($name, $refresh = false)
     {
@@ -200,7 +200,7 @@ class DbModel extends Model
     /**
      * 返回模型的的主键,该方法可以被重写
      * @return array|string
-     * @throws Exception
+     * @throws \Exception
      */
     public function primaryKey()
     {
@@ -210,7 +210,7 @@ class DbModel extends Model
     /**
      * 获取主键的值，若为符合主键，返回 key=>value 数组
      * @return array|mixed|null
-     * @throws Exception
+     * @throws \Exception
      */
     public function getPrimaryKey()
     {
@@ -230,7 +230,7 @@ class DbModel extends Model
     /**
      * 设置主键的值
      * @param mixed $value
-     * @throws Exception
+     * @throws \Exception
      */
     public function setPrimaryKey($value)
     {
@@ -301,7 +301,7 @@ class DbModel extends Model
      * 返回属性值
      * @param array|bool $names
      * @return array attribute values (name=>value).
-     * @throws Exception
+     * @throws \Exception
      */
     public function getAttributes($names = true)
     {
@@ -333,7 +333,7 @@ class DbModel extends Model
      * @param string $name
      * @param mixed $value
      * @return bool
-     * @throws Exception
+     * @throws \Exception
      */
     public function setAttribute($name, $value)
     {
@@ -381,7 +381,7 @@ class DbModel extends Model
      * @param array $attributes
      * @param bool $callAfterFind
      * @return $this|null
-     * @throws Exception
+     * @throws \Exception
      */
     protected function populateRecord($attributes, $callAfterFind = true)
     {
@@ -409,7 +409,7 @@ class DbModel extends Model
      * 创建查询命令
      * @param Criteria $criteria
      * @return \Db\Builder\FindBuilder
-     * @throws Exception
+     * @throws \Exception
      */
     protected function findBuilder(Criteria $criteria)
     {
@@ -424,7 +424,7 @@ class DbModel extends Model
      * 根据条件查询模型记录并返回模型实例化
      * @param Criteria $criteria
      * @return $this|null
-     * @throws Exception
+     * @throws \Exception
      */
     public function find(Criteria $criteria)
     {
@@ -442,7 +442,7 @@ class DbModel extends Model
      * 根据条件查询模型记录并返回模型实例化
      * @param Criteria $criteria
      * @return $this[]|null
-     * @throws Exception
+     * @throws \Exception
      */
     public function findAll(Criteria $criteria)
     {
@@ -462,7 +462,7 @@ class DbModel extends Model
      * 根据给定属性查询记录
      * @param array $attributes
      * @return $this|null
-     * @throws Exception
+     * @throws \Exception
      */
     public function findByAttributes($attributes)
     {
@@ -475,7 +475,7 @@ class DbModel extends Model
      * 根据给定属性查询记录
      * @param array $attributes
      * @return $this[]|null
-     * @throws Exception
+     * @throws \Exception
      */
     public function findAllByAttributes(array $attributes)
     {
@@ -488,7 +488,7 @@ class DbModel extends Model
      * 根据主键查询一条记录
      * @param mixed $pk
      * @return $this|null
-     * @throws Exception
+     * @throws \Exception
      */
     public function findByPk($pk)
     {
@@ -501,7 +501,7 @@ class DbModel extends Model
      * 根据主键查询记录
      * @param array $pks
      * @return $this[]|null
-     * @throws Exception
+     * @throws \Exception
      */
     public function findAllByPks(array $pks)
     {
@@ -514,7 +514,7 @@ class DbModel extends Model
      * 根据条件查询符合条件的记录数
      * @param Criteria $criteria
      * @return int
-     * @throws Exception
+     * @throws \Exception
      */
     public function count(Criteria $criteria)
     {
@@ -525,7 +525,7 @@ class DbModel extends Model
      * 查询符合属性的记录数
      * @param array $attributes
      * @return int
-     * @throws Exception
+     * @throws \Exception
      */
     public function countByAttributes(array $attributes)
     {
@@ -538,7 +538,7 @@ class DbModel extends Model
      * 查询是否有符合条件的记录
      * @param Criteria $criteria
      * @return bool
-     * @throws Exception
+     * @throws \Exception
      */
     public function exists(Criteria $criteria)
     {
@@ -549,7 +549,7 @@ class DbModel extends Model
      * 查询是否有符合条件的记录
      * @param array $attributes
      * @return bool
-     * @throws Exception
+     * @throws \Exception
      */
     public function existByAttributes(array $attributes)
     {
@@ -573,12 +573,11 @@ class DbModel extends Model
     }
 
     /**
-     * todo
      * 保存模型数据记录
      * @param bool|true $runValidation
      * @param mixed $attributes
      * @return bool
-     * @throws Exception
+     * @throws \Exception
      */
     public function save($runValidation = true, $attributes = null)
     {
