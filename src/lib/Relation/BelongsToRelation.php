@@ -1,5 +1,4 @@
 <?php
-
 /**
  * Link         :   http://www.phpcorner.net
  * User         :   qingbing<780042175@qq.com>
@@ -8,7 +7,6 @@
  */
 
 namespace DbModel\Relation;
-
 
 use DbModel\DbRelation;
 

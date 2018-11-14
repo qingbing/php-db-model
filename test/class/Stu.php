@@ -14,6 +14,7 @@ class Stu extends DbModel
 {
     /* @var int 开启缓存时缓存的时间（秒） */
     protected $cachingDuration = 0;
+
     /**
      * 显示定义数据表名称，和类名相同，可以不用显示定义，但是建议都定义下
      * @return string
@@ -21,6 +22,18 @@ class Stu extends DbModel
     public function tableName()
     {
         return "{{stu}}";
+    }
+
+    /**
+     * 定义并返回模型属性的验证规则
+     * @return array
+     */
+    public function rules()
+    {
+        return [
+            ['class_id, name, sex, is_master', 'string'],
+            ['id', 'safe'],
+        ];
     }
 
     /**

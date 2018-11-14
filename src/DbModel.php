@@ -1,6 +1,7 @@
 <?php
 
 use Db\Builder\Criteria;
+use Db\Exception;
 use DbModel\DbMetaData;
 use Model\Model;
 
@@ -21,6 +22,9 @@ class DbModel extends Model
     /* @var string belongTo，统计 对应的关系类 */
     const STAT = '\DbModel\Relation\StatRelation';
 
+    /* @var string 唯一验证 */
+    const UNIQUE = '\DbModel\Validators\Unique';
+
     /* @var int 开启缓存时缓存的时间（秒） */
     protected $cachingDuration = 86400;
 
@@ -36,8 +40,10 @@ class DbModel extends Model
     private $_attributes = [];
     /* @var mixed 模型主键值 */
     private $_pk;
-    /* @var */
-    private $_related = []; // 属性 relationName => relatedObject
+    /* @var array 关联关系模型 relationName => relatedObject */
+    private $_related = [];
+    /* @var array 程序设置过的字段 */
+    private $_updatedAttributes = [];
 
     /**
      * 获取 db-model 实例
@@ -115,28 +121,6 @@ class DbModel extends Model
             self::$_db = \Db::getInstance();
         }
         return self::$_db;
-    }
-
-    /**
-     * 引号包裹字段名称，带表名
-     * @param string $name
-     * @return string
-     * @throws Exception
-     */
-    public function quoteColumnName($name)
-    {
-        return $this->getConnection()->quoteColumnName($name);
-    }
-
-    /**
-     * 引号包裹表名称，带库名
-     * @param string $name
-     * @return string
-     * @throws Exception
-     */
-    public function quoteTableName($name)
-    {
-        return $this->getConnection()->quoteTableName($name);
     }
 
     /**
@@ -256,7 +240,7 @@ class DbModel extends Model
             $this->{$primaryKey} = $value;
         } else if (is_array($primaryKey)) {
             foreach ($primaryKey as $name) {
-                $this->$name = $value[$name];
+                $this->{$name} = $value[$name];
             }
         }
     }
@@ -280,6 +264,24 @@ class DbModel extends Model
     }
 
     /**
+     * 获取设置过更新的 db-record-attribute
+     * @return array
+     */
+    protected function getUpdatedAttributes()
+    {
+        return array_keys($this->_updatedAttributes);
+    }
+
+    /**
+     * 添加设置过更新的 db-record-attribute
+     * @param string $attributeName
+     */
+    protected function addUpdateAttributes($attributeName)
+    {
+        $this->_updatedAttributes[$attributeName] = 1;
+    }
+
+    /**
      * 返回指定属性的值
      * @param string $name
      * @return mixed
@@ -287,7 +289,7 @@ class DbModel extends Model
     public function getAttribute($name)
     {
         if (property_exists($this, $name)) {
-            return $this->$name;
+            return $this->{$name};
         } else if (isset($this->_attributes[$name])) {
             return $this->_attributes[$name];
         } else {
@@ -296,8 +298,6 @@ class DbModel extends Model
     }
 
     /**
-     * todo
-     * todo
      * 返回属性值
      * @param array|bool $names
      * @return array attribute values (name=>value).
@@ -308,7 +308,7 @@ class DbModel extends Model
         $attributes = $this->_attributes;
         foreach ($this->getMetaData()->columns as $name => $column) {
             if (property_exists($this, $name)) {
-                $attributes[$name] = $this->$name;
+                $attributes[$name] = $this->{$name};
             } else if (true === $names && !isset($attributes[$name])) {
                 $attributes[$name] = null;
             }
@@ -317,7 +317,7 @@ class DbModel extends Model
             $attrs = [];
             foreach ($names as $name) {
                 if (property_exists($this, $name)) {
-                    $attrs[$name] = $this->$name;
+                    $attrs[$name] = $this->{$name};
                 } else {
                     $attrs[$name] = isset($attributes[$name]) ? $attributes[$name] : null;
                 }
@@ -329,7 +329,6 @@ class DbModel extends Model
     }
 
     /**
-     * todo
      * 设置指定属性的值
      * @param string $name
      * @param mixed $value
@@ -338,12 +337,9 @@ class DbModel extends Model
      */
     public function setAttribute($name, $value)
     {
-        var_dump(123);
-
-        exit;
         if (property_exists($this, $name)) {
             $this->addUpdateAttributes($name); // 程序更新过的字段
-            $this->$name = $value;
+            $this->{$name} = $value;
         } else if (isset($this->getMetaData()->columns[$name])) {
             $this->addUpdateAttributes($name); // 程序更新过的字段
             $this->_attributes[$name] = $value;
@@ -471,11 +467,7 @@ class DbModel extends Model
     public function findByAttributes($attributes)
     {
         $criteria = new Criteria();
-        $attrs = [];
-        foreach ($attributes as $f => $v) {
-            $attrs[$this->quoteColumnName($f)] = $v;
-        }
-        $criteria->addWhereByAttributes($attrs);
+        $criteria->addWhereByAttributes($attributes);
         return $this->find($criteria);
     }
 
@@ -485,14 +477,10 @@ class DbModel extends Model
      * @return $this[]|null
      * @throws Exception
      */
-    public function findAllByAttributes($attributes)
+    public function findAllByAttributes(array $attributes)
     {
         $criteria = new Criteria();
-        $attrs = [];
-        foreach ($attributes as $f => $v) {
-            $attrs[$this->quoteColumnName($f)] = $v;
-        }
-        $criteria->addWhereByAttributes($attrs);
+        $criteria->addWhereByAttributes($attributes);
         return $this->findAll($criteria);
     }
 
@@ -534,50 +522,312 @@ class DbModel extends Model
     }
 
     /**
-     * todo
      * 查询符合属性的记录数
-     * @param $attributes
+     * @param array $attributes
      * @return int
+     * @throws Exception
      */
-    public function countByAttributes($attributes)
+    public function countByAttributes(array $attributes)
     {
         $criteria = new Criteria();
-        $attrs = [];
-        foreach ($attributes as $f => $v) {
-            $attrs[$this->quoteColumnName($f)] = $v;
-        }
-        $criteria->addWhereByAttributes($attrs);
+        $criteria->addWhereByAttributes($attributes);
         return $this->count($criteria);
     }
 
     /**
-     * todo
      * 查询是否有符合条件的记录
      * @param Criteria $criteria
-     * @param array $params
+     * @return bool
+     * @throws Exception
+     */
+    public function exists(Criteria $criteria)
+    {
+        return $this->count($criteria) > 0;
+    }
+
+    /**
+     * 查询是否有符合条件的记录
+     * @param array $attributes
+     * @return bool
+     * @throws Exception
+     */
+    public function existByAttributes(array $attributes)
+    {
+        return $this->countByAttributes($attributes) > 0;
+    }
+
+    /**
+     * 在数据保存之前执行
      * @return bool
      */
-    public function exists(Criteria $criteria, $params = [])
+    protected function beforeSave()
     {
-        return $this->count($criteria, $params) > 0;
+        return true;
+    }
+
+    /**
+     * 在数据保存之后执行
+     */
+    protected function afterSave()
+    {
     }
 
     /**
      * todo
-     * 查询是否有符合条件的记录
-     * @param array $attributes
+     * 保存模型数据记录
+     * @param bool|true $runValidation
+     * @param mixed $attributes
+     * @return bool
+     * @throws Exception
+     */
+    public function save($runValidation = true, $attributes = null)
+    {
+        if (!$runValidation || $this->validate($attributes)) {
+            if ($this->beforeSave()) {
+                $r = $this->getIsNewRecord() ? $this->insert($attributes) : $this->update($attributes);
+                if ($r) {
+                    $this->afterSave();
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
+    /**
+     * 在数据插入之前执行
      * @return bool
      */
-    public function existByAttributes($attributes)
+    protected function beforeInsert()
     {
-        return $this->countByAttributes($attributes) > 0;
+        return true;
+    }
+
+    /**
+     * 在数据插入之后执行
+     */
+    protected function afterInsert()
+    {
+    }
+
+    /**
+     * 插入新数据
+     * @param array|null $attributes
+     * @return bool
+     * @throws \Exception
+     */
+    public function insert($attributes = null)
+    {
+        if (!$this->getIsNewRecord()) {
+            throw new Exception('模型不能重复执行添加操作', 101200101);
+        }
+        if ($this->beforeInsert()) {
+            // 构建插入命令
+            $command = $this->getConnection()
+                ->getInsertBuilder()
+                ->setTable($this->tableName())
+                ->setColumns($this->getAttributes($attributes));
+            // 插入并获取自增ID
+            if ($command->execute()) {
+                $table = $this->getMetaData()->tableSchema;
+                $primaryKey = $table->primaryKey;
+                // 为自增主键添加值
+                if (
+                    is_string($primaryKey)
+                    && null === $this->{$primaryKey}
+                    && $table->columns[$primaryKey]->autoIncrement
+                ) {
+                    $this->{$primaryKey} = $this->getConnection()->getLastInsertId();
+                }
+                $this->_pk = $this->getPrimaryKey();
+                $this->setIsNewRecord(false);
+                $this->setScenario('update');
+                $this->afterInsert();
+                return true;
+            }
+        }
+        return false;
+    }
+
+    /**
+     * 在数据更新之前执行
+     * @return bool
+     */
+    protected function beforeUpdate()
+    {
+        return true;
+    }
+
+    /**
+     * 在数据更新之后执行
+     */
+    protected function afterUpdate()
+    {
+    }
+
+    /**
+     * 更新模型记录
+     * @param mixed $attributes
+     * @return bool
+     * @throws \Exception
+     */
+    public function update($attributes)
+    {
+        if ($this->getIsNewRecord()) {
+            throw new Exception('新增模型不能使用更新操作', 101200102);
+        }
+        if ($this->beforeUpdate()) {
+            if (null === $this->_pk) {
+                $this->_pk = $this->getPrimaryKey();
+            }
+            if (null === $attributes) {
+                $attributes = $this->getUpdatedAttributes();
+            }
+            if (false !== $this->updateByPk($this->getOldPrimaryKey(), $this->getAttributes($attributes))) {
+                $this->_pk = $this->getPrimaryKey();
+                $this->afterUpdate();
+                return true;
+            }
+        }
+        return false;
+    }
+
+    /**
+     * 根据主键更新记录
+     * @param mixed $pk
+     * @param array $columns
+     * @param mixed $criteria
+     * @return int
+     * @throws \Exception
+     */
+    public function updateByPk($pk, array $columns, $criteria = '')
+    {
+        return $this->updateAllByAttributes($columns, [
+            $this->primaryKey() => $pk,
+        ], $criteria);
+    }
+
+    /**
+     * 根据属性修改数据
+     * @param array $columns
+     * @param array $attributes
+     * @param string $criteria
+     * @return int
+     * @throws \Exception
+     */
+    public function updateAllByAttributes($columns, array $attributes, $criteria = '')
+    {
+        if (!$criteria instanceof Criteria) {
+            $criteria = new Criteria([
+                'where' => $criteria,
+            ]);
+        }
+        $criteria->addWhereByAttributes($attributes);
+        return $this->updateAll($columns, $criteria);
+    }
+
+    /**
+     * 更新模型中数据记录
+     * @param array $columns
+     * @param mixed $criteria
+     * @return int
+     * @throws \Exception
+     */
+    public function updateAll($columns, $criteria)
+    {
+        return $this->getConnection()
+            ->getUpdateBuilder()
+            ->setTable($this->tableName())
+            ->setWhere($criteria)
+            ->setColumns($columns)
+            ->execute();
+    }
+
+    /**
+     * 在数据删除之前执行
+     * @return bool
+     */
+    protected function beforeDelete()
+    {
+        return true;
+    }
+
+    /**
+     * 在数据删除之后执行
+     */
+    protected function afterDelete()
+    {
+    }
+
+    /**
+     * 删除当前模型对应记录
+     * @return bool
+     * @throws \Exception
+     */
+    public function delete()
+    {
+        if ($this->getIsNewRecord()) {
+            throw new Exception('新增模型不能使用删除操作', 101200103);
+        }
+        if ($this->beforeDelete() && false !== $this->deleteByPk($this->getPrimaryKey())) {
+            $this->afterDelete();
+            return true;
+        }
+        return false;
+    }
+
+    /**
+     * 删除对应主键的记录
+     * @param mixed $pk
+     * @param string|Criteria $criteria
+     * @return int
+     * @throws \Exception
+     */
+    public function deleteByPk($pk, $criteria = '')
+    {
+        return $this->deleteAllByAttributes([
+            $this->primaryKey() => $pk,
+        ], $criteria);
+    }
+
+    /**
+     * 删除对应属性的记录
+     * @param array $attributes
+     * @param string $criteria
+     * @return int
+     * @throws \Exception
+     */
+    public function deleteAllByAttributes(array $attributes, $criteria = '')
+    {
+        if (!$criteria instanceof Criteria) {
+            $criteria = new Criteria([
+                'where' => $criteria,
+            ]);
+        }
+        $criteria->addWhereByAttributes($attributes);
+        return $this->deleteAll($criteria);
+    }
+
+    /**
+     * 删除符合条件的记录
+     * @param string|Criteria $criteria
+     * @return int
+     * @throws \Exception
+     */
+    public function deleteAll($criteria)
+    {
+        return $this->getConnection()
+            ->getDeleteBuilder()
+            ->setTable($this->tableName())
+            ->setWhere($criteria)
+            ->execute();
     }
 
     /**
      * __get：魔术方法，当直接访问属性不存在时被唤醒
      * @param string $property
      * @return mixed
-     * @throws Exception
+     * @throws \Exception
      */
     public function __get($property)
     {
@@ -595,11 +845,10 @@ class DbModel extends Model
     }
 
     /**
-     * todo
      * __set：魔术方法，当直接设置不存在属性时被唤醒
      * @param string $name
      * @param mixed $value
-     * @throws Exception
+     * @throws \Exception
      */
     public function __set($name, $value)
     {

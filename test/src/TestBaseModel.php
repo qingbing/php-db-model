@@ -8,9 +8,7 @@
 
 namespace Test;
 
-use Db\Builder\Criteria;
 use TestClass\Stu;
-use TestClass\StuCourse;
 use TestCore\Tester;
 
 class TestBaseModel extends Tester
@@ -22,37 +20,18 @@ class TestBaseModel extends Tester
      */
     public function run()
     {
-        // 获取数据库模型
+        // 新增模型数据
         $model = new Stu();
-
-        // 获取数据表模型属性（字段）
-        $attributeNames = $model->attributeNames();
-        var_dump($attributeNames);
-
-        // 获取模型主键
-        $primaryKey = $model->primaryKey();
-        var_dump($primaryKey);
-
-        // 设置模型主键的值
-        $model->setPrimaryKey(11);
-
-        // 获取模型主键值
-        $primaryValue = $model->getPrimaryKey();
-        var_dump($primaryValue);
-
-
-        exit;
-        // 设置属性值
+        // 设置字段属性
         $model->setAttributes([
-            'name' => 'xx',
-            'sex' => 'xe',
+            'name' => 'insertName',
+            'class_id' => '4',
+            'sex' => '1',
         ]);
-
-        // 获取属性值
-        $attributes = $model->getAttributes();
-        var_dump($attributes);
-
-        var_dump(1111111111);
-
+        // 获取字段数据
+        var_dump($model->name);
+        var_dump($model->getAttribute('name'));
+        // 获取所有字段数据
+        var_dump($model->getAttributes());
     }
 }

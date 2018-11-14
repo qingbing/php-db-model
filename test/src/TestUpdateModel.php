@@ -10,7 +10,6 @@ namespace Test;
 
 use Db\Builder\Criteria;
 use TestClass\Stu;
-use TestClass\StuCourse;
 use TestCore\Tester;
 
 class TestUpdateModel extends Tester
@@ -22,12 +21,37 @@ class TestUpdateModel extends Tester
      */
     public function run()
     {
-        $model = Stu::model()->findByPk('7');
-        $model->setAttributes([
-            'name' => 'update',
+        // 通过 Criteria 更新数据
+        $criteria = new Criteria();
+        $criteria->addWhere('`id`>=:minId', [
+            ':minId' => 7
         ]);
-        if ($model->validate()) {
-            var_dump($model->save());
+        $num = Stu::model()->updateAll([
+            'name' => 'updateAll',
+        ], $criteria);
+        var_dump($num);
+
+        // 根据属性修改数据
+        $num = Stu::model()->updateAllByAttributes([
+            'name' => 'updateAllByAttributes',
+        ], [
+            'id' => 7
+        ]);
+        var_dump($num);
+
+        // 根据主键更新记录
+        $num = Stu::model()->updateByPk(8, [
+            'name' => 'updateByPk',
+        ]);
+        var_dump($num);
+
+        // 模型查询
+        $model = Stu::model()->findByPk('9');
+        $model->setAttributes([
+            'name' => 'updateSave',
+        ]);
+        if ($model->save()) {
+            var_dump('save success');
         } else {
             var_dump($model->getErrors());
         }

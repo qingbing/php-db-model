@@ -2,16 +2,16 @@
 /**
  * Link         :   http://www.phpcorner.net
  * User         :   qingbing<780042175@qq.com>
- * Date         :   2018-11-11
+ * Date         :   2018-11-14
  * Version      :   1.0
  */
 
 namespace Test;
 
-use TestClass\Stu;
+use TestClass\StuClass;
 use TestCore\Tester;
 
-class TestAddModel extends Tester
+class TestUnique extends Tester
 {
     /**
      * 执行函数
@@ -20,14 +20,10 @@ class TestAddModel extends Tester
      */
     public function run()
     {
-        // 新增模型数据
-        $model = new Stu();
+        $model = new StuClass();
 
-        // 设置模型数据
         $model->setAttributes([
-            'name' => 'insertName',
-            'class_id' => '4',
-            'sex' => '1',
+            'name' => '二年级',
         ]);
 
         // 保存判断

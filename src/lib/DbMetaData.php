@@ -40,7 +40,7 @@ class DbMetaData extends Base
             throw new Exception(str_cover('模型"{class}"的数据表"{tableName}"不存在', [
                 '{class}' => $this->_modelClassName,
                 '{table}' => $tableName,
-            ]));
+            ]), 101200201);
         }
         if (null === $table->primaryKey) {
             $table->primaryKey = $model->primaryKey();
@@ -80,10 +80,10 @@ class DbMetaData extends Base
         if (isset($config[0], $config[1], $config[2])) {
             $this->relations[$name] = new $config[0]($name, $config[1], $config[2], array_slice($config, 3));
         } else {
-            throw new Exception(str_cover('"{class}"中存在无效的关联关系配置"{relation}".', [
+            throw new Exception(str_cover('"{class}"中存在无效的关联关系配置"{relation}"', [
                 '{class}' => $this->_modelClassName,
                 '{relation}' => $name,
-            ]));
+            ]), 101200202);
         }
     }
 

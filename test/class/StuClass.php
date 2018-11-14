@@ -12,13 +12,28 @@ use DbModel;
 
 class StuClass extends DbModel
 {
+    protected $cachingDuration = 0;
+
     /**
      * 显示定义数据表名称，和类名相同，可以不用显示定义，但是建议都定义下
      * @return string
      */
     public function tableName()
     {
-        return "{{stu_class}}";
+        return "{{class}}";
+    }
+
+    /**
+     * 定义并返回模型属性的验证规则
+     * @return array
+     */
+    public function rules()
+    {
+        return [
+            ['name', 'string'],
+            ['name', self::UNIQUE], // 模型唯一性验证
+            ['id', 'safe'],
+        ];
     }
 
     /**
@@ -28,8 +43,20 @@ class StuClass extends DbModel
     public function relations()
     {
         return [
-            'master' => [self::HAS_ONE, '\TestClass\Stu', 'stu_id', 'condition' => '`is_master`=:is_master', 'params' => [':is_master' => 1]],
-            'stu' => [self::HAS_MANY, '\TestClass\Stu', 'stu_id'],
+            'master' => [self::HAS_ONE, '\TestClass\Stu', 'class_id', 'condition' => '`is_master`=:is_master', 'params' => [':is_master' => 1]],
+            'stu' => [self::HAS_MANY, '\TestClass\Stu', 'class_id'],
+        ];
+    }
+
+    /**
+     * 获取属性标签，该属性在必要时需要被实例类重写
+     * @return array
+     */
+    public function attributeLabels()
+    {
+        return [
+            'id' => '自增ID',
+            'name' => '年级',
         ];
     }
 }
