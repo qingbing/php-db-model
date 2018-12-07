@@ -8,7 +8,6 @@
 
 namespace DbModel;
 
-
 use Db\Exception;
 use DbModel;
 use Helper\Base;
@@ -23,7 +22,7 @@ class DbMetaData extends Base
     public $columns;
     /* @var array 属性默认值 */
     public $attributeDefaults = [];
-    /* @var DbRelation[] 外部模型关联关系 */
+    /* @var \DbModel\Abstracts\DbRelation[] 外部模型关联关系 */
     public $relations = [];
 
     /**
@@ -40,7 +39,7 @@ class DbMetaData extends Base
             throw new Exception(str_cover('模型"{class}"的数据表"{tableName}"不存在', [
                 '{class}' => $this->_modelClassName,
                 '{table}' => $tableName,
-            ]), 101200201);
+            ]), 101500201);
         }
         if (null === $table->primaryKey) {
             $table->primaryKey = $model->primaryKey();
@@ -83,7 +82,7 @@ class DbMetaData extends Base
             throw new Exception(str_cover('"{class}"中存在无效的关联关系配置"{relation}"', [
                 '{class}' => $this->_modelClassName,
                 '{relation}' => $name,
-            ]), 101200202);
+            ]), 101500202);
         }
     }
 

@@ -8,8 +8,8 @@
 
 namespace DbModel\Validators;
 
+use Abstracts\Validator;
 use Db\Builder\Criteria;
-use Model\Validator;
 
 class Unique extends Validator
 {

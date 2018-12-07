@@ -1,9 +1,9 @@
 <?php
 
+use Abstracts\Model;
 use Db\Builder\Criteria;
 use Db\Exception;
 use DbModel\DbMetaData;
-use Model\Model;
 
 /**
  * Link         :   http://www.phpcorner.net
@@ -118,7 +118,7 @@ class DbModel extends Model
     public function getConnection()
     {
         if (null === self::$_db) {
-            self::$_db = \Db::getInstance();
+            self::$_db = \Db::getInstance('database');
         }
         return self::$_db;
     }
@@ -618,7 +618,7 @@ class DbModel extends Model
     public function insert($attributes = null)
     {
         if (!$this->getIsNewRecord()) {
-            throw new Exception('模型不能重复执行添加操作', 101200101);
+            throw new Exception('模型不能重复执行添加操作', 101500101);
         }
         if ($this->beforeInsert()) {
             // 构建插入命令
@@ -673,7 +673,7 @@ class DbModel extends Model
     public function update($attributes)
     {
         if ($this->getIsNewRecord()) {
-            throw new Exception('新增模型不能使用更新操作', 101200102);
+            throw new Exception('新增模型不能使用更新操作', 101500102);
         }
         if ($this->beforeUpdate()) {
             if (null === $this->_pk) {
@@ -766,7 +766,7 @@ class DbModel extends Model
     public function delete()
     {
         if ($this->getIsNewRecord()) {
-            throw new Exception('新增模型不能使用删除操作', 101200103);
+            throw new Exception('新增模型不能使用删除操作', 101500103);
         }
         if ($this->beforeDelete() && false !== $this->deleteByPk($this->getPrimaryKey())) {
             $this->afterDelete();

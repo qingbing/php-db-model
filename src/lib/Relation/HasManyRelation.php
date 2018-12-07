@@ -9,8 +9,7 @@
 
 namespace DbModel\Relation;
 
-
-use DbModel\DbRelation;
+use DbModel\Abstracts\DbRelation;
 
 class HasManyRelation extends DbRelation
 {
