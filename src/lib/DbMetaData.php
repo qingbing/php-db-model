@@ -8,9 +8,9 @@
 
 namespace DbModel;
 
+use Abstracts\Base;
 use Db\Exception;
 use DbModel;
-use Helper\Base;
 
 class DbMetaData extends Base
 {

@@ -22,7 +22,7 @@ class TestRelationModel extends Tester
     public function run()
     {
         // 查找数据并实例化成db模型
-        $stu = Stu::model()->findByPk('4');
+        $stu = Stu::model()->findByPk('6');
         var_dump($stu);
         // 获取数据模型信息
         $metaData = $stu->getMetaData();

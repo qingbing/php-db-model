@@ -9,8 +9,8 @@
 namespace TestCore;
 
 
+use Abstracts\SingleTon;
 use Helper\Exception;
-use Helper\SingleTon;
 
 class TestCommand extends SingleTon
 {

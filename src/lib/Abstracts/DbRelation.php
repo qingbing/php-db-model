@@ -8,8 +8,8 @@
 
 namespace DbModel\Abstracts;
 
+use Abstracts\Base;
 use Db\Builder\Criteria;
-use Helper\Base;
 
 abstract class DbRelation extends Base
 {
