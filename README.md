@@ -5,7 +5,7 @@ db-model 的相关操作，定义了包含数据表关联关系的数据表操�
 ## 注意事项
  - 继承自php-model的 Model 类，包含有 php-model 的所有相关操作
  - 提供对数据表的对应关系，save(insert和update)、delete、find等操作
- - 增加了model的模型唯一性验证 : \DbModel\Validators\Unique
+ - 增加了model的模型唯一性验证 : \DbModelSupports\Validators\Unique
  - 数据对象之间包含有四种关联关系
    - BELONGS_TO : 属于
    - HAS_MANY : 拥有（多个）
