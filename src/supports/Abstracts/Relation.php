@@ -2,16 +2,17 @@
 /**
  * Link         :   http://www.phpcorner.net
  * User         :   qingbing<780042175@qq.com>
- * Date         :   2018-12-07
+ * Date         :   2018-12-13
  * Version      :   1.0
  */
 
-namespace DbModel\Abstracts;
+namespace DbModelSupports\Abstracts;
+
 
 use Abstracts\Base;
-use Db\Builder\Criteria;
+use DbSupports\Builder\Criteria;
 
-abstract class DbRelation extends Base
+abstract class Relation extends Base
 {
     /* @var string 关联名称 */
     public $name;
@@ -80,7 +81,7 @@ abstract class DbRelation extends Base
 
     /**
      * 查找关系结果
-     * @param \DbModel $model
+     * @param \Abstracts\DbModel $model
      * @param array $params
      * @param string $method
      * @return mixed
@@ -104,7 +105,7 @@ abstract class DbRelation extends Base
 
     /**
      * 获取关联模型或结果
-     * @param \DbModel $model
+     * @param \Abstracts\DbModel $model
      * @param array $params
      * @return mixed
      */

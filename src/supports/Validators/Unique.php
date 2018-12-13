@@ -2,14 +2,15 @@
 /**
  * Link         :   http://www.phpcorner.net
  * User         :   qingbing<780042175@qq.com>
- * Date         :   2018-11-14
+ * Date         :   2018-12-13
  * Version      :   1.0
  */
 
-namespace DbModel\Validators;
+namespace DbModelSupports\Validators;
+
 
 use Abstracts\Validator;
-use Db\Builder\Criteria;
+use DbSupports\Builder\Criteria;
 
 class Unique extends Validator
 {
@@ -22,7 +23,7 @@ class Unique extends Validator
 
     /**
      * 通过当前规则验证属性，如果有验证不通过的情况，将通过 model 的 addError 方法添加错误信息
-     * @param \DbModel $object
+     * @param \Abstracts\DbModel $object
      * @param string $attribute
      * @throws \Exception
      */

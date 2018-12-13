@@ -8,8 +8,17 @@
 
 namespace TestClass;
 
-use DbModel;
 
+use Abstracts\DbModel;
+
+/**
+ * Class Stu
+ * @package TestClass
+ *
+ * @property-read \TestClass\StuClass stuClass
+ * @property-read \TestClass\StuCourse[] course
+ * @property-read \int statCourse
+ */
 class Stu extends DbModel
 {
     /* @var int 开启缓存时缓存的时间（秒） */

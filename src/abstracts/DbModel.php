@@ -1,29 +1,33 @@
 <?php
-
-use Abstracts\Model;
-use Db\Builder\Criteria;
-use Db\Exception;
-use DbModel\DbMetaData;
-
 /**
  * Link         :   http://www.phpcorner.net
  * User         :   qingbing<780042175@qq.com>
- * Date         :   2018-11-12
+ * Date         :   2018-12-13
  * Version      :   1.0
  */
-class DbModel extends Model
+
+namespace Abstracts;
+
+
+use Components\Db;
+use Components\FileCache;
+use DbModelSupports\DbMetaData;
+use DbSupports\Builder\Criteria;
+use DbSupports\Exception;
+
+abstract class DbModel extends Model
 {
     /* @var string belongTo，属于 对应的关系类 */
-    const BELONGS_TO = '\DbModel\Relation\BelongsToRelation';
+    const BELONGS_TO = '\DbModelSupports\Relations\BelongsToRelation';
     /* @var string hasOne，拥有（一个） 对应的关系类 */
-    const HAS_ONE = '\DbModel\Relation\HasOneRelation';
+    const HAS_ONE = '\DbModelSupports\Relations\HasOneRelation';
     /* @var string belongTo，拥有（多个） 对应的关系类 */
-    const HAS_MANY = '\DbModel\Relation\HasManyRelation';
+    const HAS_MANY = '\DbModelSupports\Relations\HasManyRelation';
     /* @var string belongTo，统计 对应的关系类 */
-    const STAT = '\DbModel\Relation\StatRelation';
+    const STAT = '\DbModelSupports\Relations\StatRelation';
 
     /* @var string 唯一验证 */
-    const UNIQUE = '\DbModel\Validators\Unique';
+    const UNIQUE = '\DbModelSupports\Validators\Unique';
 
     /* @var int 开启缓存时缓存的时间（秒） */
     protected $cachingDuration = 86400;
@@ -63,13 +67,16 @@ class DbModel extends Model
 
     /**
      * 获取缓存实例
-     * @return CacheFile|null
+     * @return FileCache|null
      * @throws \Exception
      */
     public function getCache()
     {
-        if (class_exists('CacheFile')) {
-            return CacheFile::getInstance('db-model');
+        if (class_exists('FileCache')) {
+            return FileCache::getInstance([
+                'ttl' => '86400',
+                'namespace' => 'db-model',
+            ]);
         }
         return null;
     }
@@ -118,7 +125,10 @@ class DbModel extends Model
     public function getConnection()
     {
         if (null === self::$_db) {
-            self::$_db = \Db::getInstance('database');
+            self::$_db = Db::getInstance([
+                'c-file' => 'database',
+                'c-group' => 'master',
+            ]);
         }
         return self::$_db;
     }
@@ -408,7 +418,7 @@ class DbModel extends Model
     /**
      * 创建查询命令
      * @param Criteria $criteria
-     * @return \Db\Builder\FindBuilder
+     * @return \DbSupports\Builder\FindBuilder
      * @throws \Exception
      */
     protected function findBuilder(Criteria $criteria)

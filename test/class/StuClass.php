@@ -8,8 +8,16 @@
 
 namespace TestClass;
 
-use DbModel;
 
+use Abstracts\DbModel;
+
+/**
+ * Class StuClass
+ * @package TestClass
+ *
+ * @property-read \TestClass\Stu master
+ * @property-read \TestClass\Stu[] stu
+ */
 class StuClass extends DbModel
 {
     protected $cachingDuration = 0;

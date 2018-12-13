@@ -8,8 +8,15 @@
 
 namespace TestClass;
 
-use DbModel;
 
+use Abstracts\DbModel;
+
+/**
+ * Class StuCourse
+ * @package TestClass
+ *
+ * @property-read \TestClass\Stu course
+ */
 class StuCourse extends DbModel
 {
     /**

@@ -8,7 +8,7 @@
 
 namespace Test;
 
-use Db\Builder\Criteria;
+use DbSupports\Builder\Criteria;
 use TestClass\Stu;
 use TestCore\Tester;
 
