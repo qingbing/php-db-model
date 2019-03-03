@@ -567,6 +567,29 @@ abstract class DbModel extends Model
     }
 
     /**
+     * 模型分页查询，返回支持是否实例化
+     * @param Criteria $criteria
+     * @param bool $instance
+     * @param int $pageSize
+     * @param null|int $pageNo
+     * @return array
+     * @throws \Exception
+     */
+    public function pagination(Criteria $criteria, $instance = false, $pageSize = 10, $pageNo = null)
+    {
+        $criteria->setTable($this->tableName());
+        $res = $this->getConnection()->pagination($criteria, [], $pageSize, $pageNo);
+        if (!$instance) {
+            return $res;
+        }
+        foreach ($res['result'] as &$re) {
+            $re = $this->populateRecord($re, true);
+        }
+        unset($re);
+        return $res;
+    }
+
+    /**
      * 在数据保存之前执行
      * @return bool
      */
