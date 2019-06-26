@@ -46,7 +46,7 @@ class TestUpdateModel extends Tester
         var_dump($num);
 
         // 模型查询
-        $model = Stu::model()->findByPk('9');
+        $model = Stu::model()->findByPk('6');
         $model->setAttributes([
             'name' => 'updateSave',
         ]);
