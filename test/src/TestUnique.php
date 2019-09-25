@@ -8,8 +8,8 @@
 
 namespace Test;
 
+use DBootstrap\Abstracts\Tester;
 use TestClass\StuClass;
-use TestCore\Tester;
 
 class TestUnique extends Tester
 {

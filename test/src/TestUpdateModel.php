@@ -8,9 +8,9 @@
 
 namespace Test;
 
+use DBootstrap\Abstracts\Tester;
 use DbSupports\Builder\Criteria;
 use TestClass\Stu;
-use TestCore\Tester;
 
 class TestUpdateModel extends Tester
 {

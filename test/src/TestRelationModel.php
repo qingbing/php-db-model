@@ -8,9 +8,9 @@
 
 namespace Test;
 
+use DBootstrap\Abstracts\Tester;
 use TestClass\Stu;
 use TestClass\StuClass;
-use TestCore\Tester;
 
 class TestRelationModel extends Tester
 {

@@ -8,8 +8,8 @@
 
 namespace Test;
 
+use DBootstrap\Abstracts\Tester;
 use TestClass\Stu;
-use TestCore\Tester;
 
 class TestAddModel extends Tester
 {
